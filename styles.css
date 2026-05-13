@@ -1,0 +1,862 @@
+:root {
+  --bg: #eef3fa;
+  --surface: #ffffff;
+  --surface2: #edf4ff;
+  --border: #d2dff0;
+  --text: #2a3a55;
+  --muted: #6e819f;
+  --accent: #2f6fca;
+  --accent-dim: #21559e;
+  --success: #34c759;
+  --danger: #ff5c5c;
+  --bar-dev: #3f7fcb;
+  --bar-live: #9a6f43;
+  --bar-integ: #df8b2d;
+  --bar-plan: #6f8fb6;
+  --bar-sit: #c95f8a;
+  --bar-uat: #7c6fd6;
+  --bar-other: #6b7280;
+  --font: "DM Sans", "Noto Sans SC", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #f6faff;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn:hover {
+  background: #e8f1ff;
+  border-color: #b9cdea;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #5298ff;
+  border-color: #5298ff;
+}
+
+.btn-ghost {
+  background: #ffffff;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.btn-danger {
+  color: var(--danger);
+  border-color: transparent;
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-danger:hover {
+  background: rgba(255, 92, 92, 0.12);
+}
+
+.file-btn input {
+  display: none;
+}
+
+.plan-tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  background: var(--surface2);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(35, 72, 118, 0.14);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel-head h2 {
+  margin: 0;
+}
+
+.hint {
+  flex: 1 1 200px;
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.snapshot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.snapshot-actions input {
+  min-width: 12rem;
+  max-width: 28rem;
+  flex: 1 1 16rem;
+  font: inherit;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.snapshot-empty {
+  margin: 0.5rem 0 0;
+  display: none;
+}
+
+.snapshot-empty.is-visible {
+  display: block;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.field.span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 640px) {
+  .field.span-2 {
+    grid-column: span 1;
+  }
+}
+
+.field span {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.field input,
+.field select,
+.data-table input,
+.data-table select,
+.data-table textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.data-table textarea {
+  min-height: 3.5rem;
+  resize: vertical;
+}
+
+input.date-field {
+  cursor: pointer;
+  min-width: 8.5rem;
+}
+
+.flatpickr-calendar {
+  z-index: 12000 !important;
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.flatpickr-months .flatpickr-month {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+  background: var(--surface2) !important;
+  color: var(--text) !important;
+}
+
+.flatpickr-weekdays {
+  background: var(--surface2);
+}
+
+span.flatpickr-weekday {
+  color: var(--muted);
+}
+
+.flatpickr-day {
+  color: var(--text);
+  border-radius: 6px;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.flatpickr-day.today {
+  border-color: var(--accent);
+}
+
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg {
+  fill: var(--accent);
+}
+
+.flatpickr-day.fp-day-cn-holiday {
+  background: rgba(212, 168, 84, 0.28) !important;
+  border-color: rgba(212, 168, 84, 0.45) !important;
+  font-weight: 600;
+}
+
+.flatpickr-day.fp-day-cn-holiday:hover {
+  background: rgba(212, 168, 84, 0.42) !important;
+}
+
+.legend-swatch-holiday {
+  background: repeating-linear-gradient(
+    -42deg,
+    rgba(255, 190, 88, 0.95),
+    rgba(255, 190, 88, 0.95) 2px,
+    rgba(255, 232, 190, 0.95) 2px,
+    rgba(255, 232, 190, 0.95) 4px
+  );
+  border: 1px solid rgba(178, 110, 28, 0.55);
+}
+
+.holiday-status {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.scroll-x {
+  max-width: 100%;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table th {
+  background: var(--surface2);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table-tasks {
+  min-width: 600px;
+}
+
+.data-table-tasks td:first-child {
+  min-width: 118px;
+  vertical-align: middle;
+}
+
+.task-row-cell {
+  min-width: 0;
+}
+
+.task-row-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.data-table-tasks td:nth-child(2) {
+  min-width: 7.5rem;
+}
+
+/* 「活动」列（功能开发&测试等）：收紧下拉内边距，减少左右留白 */
+.data-table-tasks select.type-preset,
+.data-table-tasks select.task-row-select {
+  padding: 0.28rem 0.38rem 0.28rem 0.42rem;
+  font-size: 0.8125rem;
+}
+
+.data-table-tasks td:nth-child(3),
+.data-table-tasks td:nth-child(4) {
+  min-width: 10.5rem;
+}
+
+input.native-range-date,
+input[type="date"] {
+  font-family: inherit;
+  font-size: 0.8125rem;
+}
+
+/* 甘特区块略收紧内边距（相对其它 .panel） */
+.gantt-panel.panel {
+  padding: 0.95rem 1rem 1.05rem;
+}
+
+.gantt-head {
+  align-items: center;
+  gap: 0.3rem 0.55rem;
+  margin-bottom: 0.45rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.gantt-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.gantt {
+  --row-h: 50px;
+  --label-w: 168px;
+  min-width: min(100%, 720px);
+  padding: 0 0 0.85rem;
+  background: #ffffff;
+}
+
+/* 顶栏铺满整宽（含左侧与计划名区域），底色+渐变避免露白缝 */
+.gantt-title {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 0.5rem;
+  padding: 0.55rem 0.75rem 0.65rem var(--label-w);
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-bottom: 1px solid #c5d7ee;
+  color: #1f3e75;
+  background-color: #e9f2ff;
+  background-image: linear-gradient(
+    180deg,
+    #e8f1ff 0%,
+    #f4f9ff 55%,
+    #fafdff 100%
+  );
+}
+
+.gantt-sprints {
+  display: grid;
+  grid-template-columns: var(--label-w) 1fr;
+  align-items: center;
+  /* 与首行拉开，迭代区垂直居中后仍避开节假日标签上伸 */
+  margin-bottom: 0.9rem;
+  min-height: 36px;
+}
+
+/* 左上「迭代」：与右侧轨道垂直居中，字号与迭代名称/日期档一致 */
+.gantt-sprints-label {
+  justify-self: center;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-align: center;
+  white-space: nowrap;
+  color: #2f5596;
+}
+
+.gantt-sprints-track {
+  position: relative;
+  min-height: 54px;
+  height: 54px;
+  border-radius: 4px;
+  background: #f3f8ff;
+  border: 1px solid #c8daf1;
+  overflow: visible;
+}
+
+.gantt-sprint-cell {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid #c6d7ee;
+  padding: 2px 3px;
+  font-size: 0.65rem;
+  color: var(--text);
+  /* 不设底色，与 .gantt-sprints-track 同色单层，仅竖线分隔迭代 */
+  background: transparent;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.35rem;
+  line-height: 1.25;
+  box-sizing: border-box;
+}
+
+.gantt-sprint-cell:last-child {
+  border-right: none;
+}
+
+.gantt-sprint-box {
+  flex: 0 0 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0;
+  padding: 0 2px;
+  background: transparent;
+}
+
+.gantt-sprint-name {
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.gantt-sprint-dates-out {
+  flex: 0 0 auto;
+  margin-top: 0;
+  text-align: center;
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #2f5596;
+  white-space: nowrap;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+
+.gantt-grid {
+  display: grid;
+  grid-template-columns: var(--label-w) 1fr;
+}
+
+.gantt-row-label {
+  padding: 0.16rem 0.12rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.3;
+  border-bottom: 1px solid #d6e2f2;
+  border-right: 1px solid #c7d8ee;
+  display: flex;
+  align-items: center;
+  min-height: var(--row-h);
+  background: #f4f8ff;
+}
+
+.gantt-row-track {
+  position: relative;
+  min-height: calc(var(--row-h) + 18px);
+  padding-top: 2px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #dce6f3;
+  background: repeating-linear-gradient(
+    90deg,
+    #fff,
+    #fff calc(100% / 12 - 1px),
+    rgba(143, 169, 201, 0.45) calc(100% / 12 - 1px),
+    rgba(143, 169, 201, 0.45) calc(100% / 12)
+  );
+  overflow: visible;
+}
+
+.gantt-row-track.has-tasks {
+  background-color: rgba(47, 111, 202, 0.035);
+}
+
+/* 日期在色块外；纵向 top 由 JS 分轨；色块可向右变宽以单行展示全文 */
+.gantt-bar-slot {
+  position: absolute;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  z-index: 22;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.gantt-bar-slot .gantt-bar-wrap {
+  pointer-events: auto;
+  filter: drop-shadow(0 1px 1.5px rgba(22, 48, 88, 0.22));
+}
+
+/* 单行日期；宽度随文案，可超出下方进度条（色块仍只占时间轴比例宽度） */
+.gantt-bar-dates-outside {
+  order: -1;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  align-self: stretch;
+  position: relative;
+  text-align: center;
+  font-size: 0.56rem;
+  font-weight: 600;
+  color: #245091;
+  line-height: 1.2;
+  white-space: nowrap;
+  display: block;
+  overflow: visible;
+  margin-bottom: 4px;
+  padding: 0 4px;
+  letter-spacing: 0.02em;
+  z-index: 3;
+}
+
+.gantt-bar-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  width: max-content;
+  min-width: 100%;
+  min-height: 28px;
+  /* 仅左侧圆角，右侧与箭头一体衔接 */
+  border-radius: 5px 0 0 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 13px 5px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow: none;
+  cursor: default;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+/* 三角与矩形色块左缘对齐、略叠 1px 消除拼缝，背景 inherit 与类型色一致 */
+.gantt-bar-wrap::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  margin-left: -1px;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  pointer-events: none;
+}
+
+/* 单行不裁剪；色块随文案变宽（min-width:100% 锚定起点侧最小为日程宽度） */
+.gantt-bar-main {
+  display: block;
+  flex: 0 0 auto;
+  width: max-content;
+  max-width: none;
+  margin: 0;
+  padding: 0 2px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: visible;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.gantt-bar-wrap[data-type="dev"] {
+  background: var(--bar-dev);
+}
+.gantt-bar-wrap[data-type="live"] {
+  background: var(--bar-live);
+}
+.gantt-bar-wrap[data-type="integ"] {
+  background: var(--bar-integ);
+}
+.gantt-bar-wrap[data-type="plan"] {
+  background: var(--bar-plan);
+}
+.gantt-bar-wrap[data-type="sit"] {
+  background: var(--bar-sit);
+}
+.gantt-bar-wrap[data-type="uat"] {
+  background: var(--bar-uat);
+}
+.gantt-bar-wrap[data-type="other"] {
+  background: var(--bar-other);
+}
+
+.gantt-milestone {
+  position: absolute;
+  top: 50%;
+  transform: translate(50%, -85%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid #e85d5d;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+  z-index: 2;
+}
+
+.gantt-marker-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(223, 72, 72, 0.8);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.gantt-marker-label {
+  position: absolute;
+  top: -18px;
+  transform: translateX(-50%);
+  font-size: 0.55rem;
+  color: #ce4d4d;
+  white-space: nowrap;
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* 法定节假日：按连续同名合并为横向色带，宽度对应日历天数 */
+.gantt-holiday-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 2px;
+  border: 1px solid rgba(178, 110, 28, 0.5);
+  background: repeating-linear-gradient(
+    -42deg,
+    rgba(255, 200, 102, 0.5),
+    rgba(255, 200, 102, 0.5) 5px,
+    rgba(255, 236, 198, 0.52) 5px,
+    rgba(255, 236, 198, 0.52) 10px
+  );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.gantt-holiday-band--labour {
+  border-color: rgba(196, 90, 18, 0.72);
+  background: repeating-linear-gradient(
+    -42deg,
+    rgba(255, 150, 58, 0.62),
+    rgba(255, 150, 58, 0.62) 5px,
+    rgba(255, 210, 140, 0.58) 5px,
+    rgba(255, 210, 140, 0.58) 10px
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1px rgba(196, 90, 18, 0.18);
+}
+
+.gantt-holiday-band-label {
+  position: absolute;
+  top: -17px;
+  transform: translateX(-50%);
+  max-width: min(220px, 42vw);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: #6b3f0a;
+  background: rgba(255, 236, 200, 0.94);
+  border: 1px solid rgba(184, 130, 40, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* 浮于迭代行、活动条与行内其它元素之上 */
+  z-index: 36;
+  pointer-events: none;
+  line-height: 1.25;
+  box-shadow: 0 1px 3px rgba(40, 20, 0, 0.12);
+}
+
+.gantt-holiday-band-label--labour {
+  color: #4a2400;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 224, 178, 0.98),
+    rgba(255, 196, 120, 0.96)
+  );
+  border-color: rgba(196, 90, 18, 0.72);
+}
+
+.gantt-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.gantt-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.5rem 0.75rem 0;
+}

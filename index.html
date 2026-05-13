@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>交付计划与甘特图</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-main">
+        <h1>交付计划工作台</h1>
+        <p class="subtitle">按迭代划定时间轴，填写关键活动后生成甘特图</p>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn btn-ghost" id="btnExportPng">导出 PNG 图片</button>
+        <button type="button" class="btn btn-ghost" id="btnExportJson">导出 JSON</button>
+        <label class="btn btn-ghost file-btn">
+          导入 JSON
+          <input type="file" id="importJson" accept="application/json" hidden />
+        </label>
+        <button type="button" class="btn btn-primary" id="btnRender">刷新甘特图</button>
+      </div>
+    </header>
+
+    <nav class="plan-tabs" role="tablist">
+      <button type="button" class="tab active" data-plan="project" role="tab" aria-selected="true">项目交付计划</button>
+      <button type="button" class="tab" data-plan="integration" role="tab" aria-selected="false">第三方集成计划</button>
+    </nav>
+
+    <section class="panel">
+      <h2>基本信息</h2>
+      <div class="field-grid">
+        <label class="field span-2">
+          <span>计划标题</span>
+          <input type="text" id="planTitle" placeholder="例如：PO17 整体交付计划" />
+        </label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>计划版本</h2>
+        <p class="hint">每次排完一版可存档；会同时保存「项目交付」与「第三方集成」两套计划，便于日后找回并恢复。</p>
+        <div class="snapshot-actions">
+          <input type="text" id="snapshotLabel" maxlength="120" placeholder="版本说明（可选）" />
+          <button type="button" class="btn btn-sm btn-primary" id="btnSaveSnapshot">保存当前版本</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="snapshotsTable">
+          <thead>
+            <tr>
+              <th>保存时间</th>
+              <th>说明</th>
+              <th>项目计划标题</th>
+              <th>集成计划标题</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="snapshotsTableBody"></tbody>
+        </table>
+      </div>
+      <p class="hint snapshot-empty" id="snapshotsEmpty">暂无存档；填写计划后点「保存当前版本」即可。</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>迭代（Sprint）</h2>
+        <p class="hint">迭代的起止日期决定甘特图时间范围；可与下方活动的日期合并取并集。每行结束日期不能早于开始日期。</p>
+        <button type="button" class="btn btn-sm" id="btnAddIteration">+ 添加迭代</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="iterationsTable">
+          <thead>
+            <tr>
+              <th>迭代名称</th>
+              <th>开始日期</th>
+              <th>结束日期</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>时间标记（可选）</h2>
+        <p class="hint">中国法定节假日已由接口自动同步并在日历、甘特图中标注；此处仅填公司展会、封版日等特殊日期（与节假日同日时以手动标记为准）。</p>
+        <button type="button" class="btn btn-sm" id="btnSyncCnHolidays">同步法定节假日</button>
+        <button type="button" class="btn btn-sm" id="btnAddMarker">+ 添加特殊标记</button>
+      </div>
+      <p class="holiday-status" id="cnHolidayStatus"></p>
+      <div class="table-wrap">
+        <table class="data-table" id="markersTable">
+          <thead>
+            <tr>
+              <th>说明</th>
+              <th>日期</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>行 / 项目维度</h2>
+        <p class="hint">左侧每一行对应一个交付项或专题。</p>
+        <button type="button" class="btn btn-sm" id="btnAddRow">+ 添加行</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table" id="rowsTable">
+          <thead>
+            <tr>
+              <th>名称</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>活动与工期</h2>
+        <p class="hint">「活动」下拉即活动名称与类型（同一项）。开始/结束用系统日期控件选择，结束不能早于开始。</p>
+        <button type="button" class="btn btn-sm" id="btnAddTask">+ 添加活动</button>
+      </div>
+      <div class="table-wrap scroll-x">
+        <table class="data-table data-table-tasks" id="tasksTable">
+          <thead>
+            <tr>
+              <th>所属模块</th>
+              <th>活动</th>
+              <th>开始</th>
+              <th>结束</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="gantt-panel panel">
+      <div class="panel-head gantt-head">
+        <h2>甘特图</h2>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="gantt-scroll">
+        <div class="gantt" id="gantt"></div>
+      </div>
+    </section>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/zh.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

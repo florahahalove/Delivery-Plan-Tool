@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Simple Browser: 打开交付计划 (localhost)",
+      "type": "shell",
+      "command": "echo \"${input:openPlanSimpleBrowser}\"",
+      "problemMatcher": [],
+      "presentation": { "reveal": "silent", "panel": "shared", "close": true }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "openPlanSimpleBrowser",
+      "type": "command",
+      "command": "simpleBrowser.show",
+      "args": ["http://127.0.0.1:8766/index.html"]
+    }
+  ]
+}
