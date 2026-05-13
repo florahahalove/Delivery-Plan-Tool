@@ -31,10 +31,12 @@
 
 ```text
 .
-├── index.html        # 页面骨架与表单结构
-├── app.js            # 所有交互逻辑、甘特图渲染、节假日同步、导入导出
-├── styles.css        # 样式（DM Sans + Noto Sans SC，浅色主题）
-├── launch.command    # macOS 双击启动脚本（直接 open index.html）
+├── index.html                  # 页面骨架与表单结构
+├── app.js                      # 所有交互逻辑、甘特图渲染、节假日同步、导入导出
+├── styles.css                  # 样式（DM Sans + Noto Sans SC，浅色主题）
+├── launch.command              # macOS 双击启动脚本（直接 open index.html）
+├── artifact/                   # 从工作台导出的示例计划数据
+│   └── delivery-plans.json     # 示例：PO20 项目交付计划 + 第三方集成交付计划
 └── README.md
 ```
 
@@ -90,6 +92,43 @@ npx serve .
 9. 通过头部按钮 **导出 PNG / 导出 JSON** 分享给团队；其他人通过 **导入 JSON** 即可还原计划
 
 > 💡 节假日数据来自 `date.nager.at` 公共接口，调休补班可能未完全覆盖；如有差异，以「特殊时间标记」手动覆盖为准。
+
+---
+
+## 📁 示例数据（artifact/）
+
+`artifact/` 目录存放了从本工作台直接导出的真实计划 JSON，可以作为参考样例，也可以通过页面顶部 **「导入 JSON」** 一键加载到工作台中查看甘特图效果。
+
+- 文件：`artifact/delivery-plans.json`
+- 内容快照：
+  - **项目交付计划**：`PO20交付计划`
+    - 迭代：`PO20 Sprint 4` ~ `PO20 Sprint 7`（2026-04-29 ~ 2026-06-23）
+    - 行 / 专题：场景化价目册、防伪接口改造、猜你想问、ZBTI
+    - 活动：覆盖 `功能开发&测试` / `接口联调` / `SIT` / `UAT` / `上线` 全链路
+  - **第三方集成交付计划**：`第三方集成交付计划`
+    - 迭代：`Sprint 2`、`Sprint 3`（占位，未填日期）
+    - 活动：`功能开发&测试`（占位）
+
+### 使用方式
+
+1. 打开 `index.html`
+2. 点击顶部 **导入 JSON**，选择 `artifact/delivery-plans.json`
+3. 工作台会自动加载两套计划，可立即查看甘特图、做版本快照或继续编辑
+
+### JSON Schema 概览
+
+```jsonc
+{
+  "project":     { "title": "...", "iterations": [...], "markers": [...], "rows": [...], "tasks": [...] },
+  "integration": { "title": "...", "iterations": [...], "markers": [...], "rows": [...], "tasks": [...] }
+}
+```
+
+- `iterations[]`：`{ id, name, start (YYYY-MM-DD), end (YYYY-MM-DD) }`
+- `markers[]`：`{ id, date, label, type }`（展会 / 封版日 / 里程碑等）
+- `rows[]`：`{ id, name }`（交付项 / 集成专题）
+- `tasks[]`：`{ id, rowId, name, type, start, end }`
+  - `type` 枚举：`plan` / `dev` / `integ` / `sit` / `uat` / `live` / `showcase` 等
 
 ---
 
