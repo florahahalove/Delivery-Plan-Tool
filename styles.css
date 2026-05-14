@@ -692,9 +692,8 @@ input[type="date"] {
   box-sizing: border-box;
 }
 
-/* 三角与矩形色块左缘对齐、略叠 1px 消除拼缝，背景 inherit 与类型色一致 */
-.gantt-bar-wrap::after {
-  content: "";
+/* 三角箭头：继承色块背景色，clip-path 裁剪为三角形 */
+.gantt-bar-arrow {
   position: absolute;
   left: 100%;
   top: 0;
@@ -704,6 +703,7 @@ input[type="date"] {
   background: inherit;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
   pointer-events: none;
+  z-index: 0;
 }
 
 /* 单行不裁剪；色块随文案变宽（min-width:100% 锚定起点侧最小为日程宽度） */

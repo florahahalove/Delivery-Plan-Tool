@@ -1481,6 +1481,9 @@
         main.className = "gantt-bar-main";
         main.textContent = t.name;
         wrap.appendChild(main);
+        const arrow = document.createElement("span");
+        arrow.className = "gantt-bar-arrow";
+        wrap.appendChild(arrow);
 
         slot.appendChild(datesOut);
         slot.appendChild(wrap);
@@ -1723,11 +1726,43 @@
               g.style.minWidth = ganttRoot.style.minWidth;
             }
           }
-          /* html2canvas 对 repeating-linear-gradient + 半透明条纹还原差，改为接近屏显的普通渐变 */
-          const holidayBg =
-            "linear-gradient(-42deg, #ffcc7a 0%, #fff0d0 22%, #ffd080 45%, #fff0d0 68%, #ffcc7a 100%)";
-          const holidayLabourBg =
-            "linear-gradient(-42deg, #ff9f4a 0%, #ffe0b8 22%, #ffb86b 45%, #ffe0b8 68%, #ff9f4a 100%)";
+          /* html2canvas 不支持 repeating-linear-gradient，用硬色阶模拟行轨道栅格竖线 */
+          p.querySelectorAll(".gantt-row-track").forEach(function (track) {
+            var w = track.offsetWidth;
+            if (!w || w < 10) return;
+            var seg = w / 12;
+            var stops = [];
+            for (var i = 0; i < 12; i++) {
+              var left = i * seg;
+              var lineLeft = left + seg - 1;
+              stops.push("#fff " + Math.round(left) + "px");
+              if (i < 11) {
+                stops.push("#fff " + Math.round(lineLeft) + "px");
+                stops.push("rgba(143,169,201,0.45) " + Math.round(lineLeft) + "px");
+                stops.push("rgba(143,169,201,0.45) " + Math.round(lineLeft + 1) + "px");
+              }
+            }
+            stops.push("#fff " + Math.round(w) + "px");
+            track.style.backgroundImage = "linear-gradient(90deg, " + stops.join(", ") + ")";
+          });
+
+          /* html2canvas 不支持 repeating-linear-gradient，用硬色阶模拟斜纹条纹 */
+          function buildStripeGradient(deg, c1, c2, stripeW) {
+            var parts = [];
+            var s = stripeW || 5;
+            var total = 0;
+            for (var i = 0; i < 30; i++) {
+              parts.push(c1 + " " + total + "px");
+              total += s;
+              parts.push(c1 + " " + total + "px");
+              parts.push(c2 + " " + total + "px");
+              total += s;
+              parts.push(c2 + " " + total + "px");
+            }
+            return "linear-gradient(" + deg + "deg, " + parts.join(", ") + ")";
+          }
+          var holidayBg = buildStripeGradient(-42, "rgba(255,190,88,0.95)", "rgba(255,232,190,0.95)", 5);
+          var holidayLabourBg = buildStripeGradient(-42, "rgba(255,150,58,0.85)", "rgba(255,210,140,0.82)", 5);
           p.querySelectorAll(".gantt-holiday-band").forEach((el) => {
             el.style.backgroundImage = "none";
             el.style.backgroundColor = "";
@@ -1741,6 +1776,40 @@
               el.style.borderColor = "rgba(178, 110, 28, 0.5)";
               el.style.boxShadow = "inset 0 0 0 1px rgba(255, 255, 255, 0.35)";
             }
+          });
+
+          /* 修复三角箭头：html2canvas 对 clip-path 支持差，改用 border 三角技法 */
+          var TYPE_COLORS = {
+            dev: "#3f7fcb",
+            live: "#9a6f43",
+            integ: "#df8b2d",
+            plan: "#6f8fb6",
+            sit: "#c95f8a",
+            uat: "#7c6fd6",
+            other: "#6b7280",
+          };
+          p.querySelectorAll(".gantt-bar-arrow").forEach(function (arrow) {
+            var wrap = arrow.parentNode;
+            var type = wrap.getAttribute("data-type") || "";
+            var bgColor = TYPE_COLORS[type] || TYPE_COLORS.other;
+            var barH = arrow.offsetHeight;
+            if (!barH || barH < 4) barH = 28;
+            var halfH = Math.ceil(barH / 2);
+            arrow.style.cssText = [
+              "position:absolute",
+              "left:100%",
+              "top:0",
+              "margin-left:-1px",
+              "width:0",
+              "height:0",
+              "border-top:" + halfH + "px solid transparent",
+              "border-bottom:" + halfH + "px solid transparent",
+              "border-left:12px solid " + bgColor,
+              "pointer-events:none",
+              "z-index:0",
+              "background:transparent",
+              "clip-path:none",
+            ].join(";");
           });
         },
       });
