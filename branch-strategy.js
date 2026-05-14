@@ -470,6 +470,29 @@
     return { start: generated.start, end: generated.end };
   }
 
+  function phaseForDateField(field) {
+    return PHASE_COLUMNS.find((p) => p.startField === field || p.endField === field) || null;
+  }
+
+  function validatePhaseDateOrder(rowId, changedField, newValue) {
+    const phase = phaseForDateField(changedField);
+    if (!phase) return { ok: true };
+    const row = rowAdjustment(rowId);
+    const nextStart =
+      changedField === phase.startField ? newValue : row[phase.startField] || "";
+    const nextEnd =
+      changedField === phase.endField ? newValue : row[phase.endField] || "";
+    const ds = parseYmd(nextStart);
+    const de = parseYmd(nextEnd);
+    if (ds && de && de < ds) {
+      return {
+        ok: false,
+        message: `${phase.label}：结束时间不能早于开始时间，请重新选择。`,
+      };
+    }
+    return { ok: true };
+  }
+
   function addDays(d, days) {
     const x = new Date(d);
     x.setDate(x.getDate() + days);
@@ -508,6 +531,26 @@
       .join("");
 
     tbody.querySelectorAll("input[data-row-id]").forEach((input) => {
+      if (input.type === "date") {
+        input.addEventListener("change", () => {
+          const rowId = input.dataset.rowId;
+          const field = input.dataset.field;
+          if (!rowId || !field) return;
+          const prev = rowAdjustment(rowId)[field];
+          const next = input.value;
+          const check = validatePhaseDateOrder(rowId, field, next);
+          if (!check.ok) {
+            alert(check.message);
+            rowAdjustment(rowId)[field] = prev;
+            renderAll();
+            return;
+          }
+          rowAdjustment(rowId)[field] = next;
+          saveAdjustments();
+          renderAll();
+        });
+        return;
+      }
       input.addEventListener("input", () => {
         const rowId = input.dataset.rowId;
         const field = input.dataset.field;
