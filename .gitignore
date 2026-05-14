@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor / IDE
+*.swp
+*.swo
+*~
+.idea/
+
+# Logs & temp
+*.log
+*.tmp
+*.temp
+
+# Optional local tooling (if you add npm later)
+node_modules/
+
+# Local env / secrets (if you add scripts later)
+.env
+.env.local
+.env.*.local
