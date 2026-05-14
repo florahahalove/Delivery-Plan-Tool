@@ -1,0 +1,192 @@
+{
+  "exportedAt": "2026-05-14T08:38:55.320Z",
+  "plans": {
+    "project": {
+      "title": "PO 整体交付计划",
+      "iterations": [
+        {
+          "id": "id-bvhn4l2o2",
+          "name": "PO20 Sprint 4",
+          "start": "2026-04-29",
+          "end": "2026-05-12"
+        },
+        {
+          "id": "id-xvuvlpt3d",
+          "name": "PO20 Sprint 5",
+          "start": "2026-05-13",
+          "end": "2026-05-26"
+        },
+        {
+          "id": "id-s4mdp6keb",
+          "name": "PO20 Sprint 6",
+          "start": "2026-05-27",
+          "end": "2026-06-09"
+        },
+        {
+          "id": "id-9dlt7dfsc",
+          "name": "PO20 Sprint 7",
+          "start": "2026-06-10",
+          "end": "2026-06-23"
+        }
+      ],
+      "rows": [
+        {
+          "id": "id-wiw1ho39l",
+          "name": "场景化价目册"
+        },
+        {
+          "id": "id-2souyhvm8",
+          "name": "防伪接口改造"
+        },
+        {
+          "id": "id-9qxq2sfsj",
+          "name": "猜你想问"
+        },
+        {
+          "id": "id-qh6oehaze",
+          "name": "ZBTI"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "id-dfk67dngv",
+          "rowId": "id-wiw1ho39l",
+          "name": "功能开发&测试",
+          "type": "dev",
+          "start": "2026-04-29",
+          "end": "2026-05-26"
+        },
+        {
+          "id": "id-up3bgrqhr",
+          "rowId": "id-2souyhvm8",
+          "name": "功能开发&测试",
+          "type": "dev",
+          "start": "2026-05-18",
+          "end": "2026-05-22"
+        },
+        {
+          "id": "id-d06mpfrs0",
+          "rowId": "id-2souyhvm8",
+          "name": "接口联调",
+          "type": "integ",
+          "start": "2026-05-25",
+          "end": "2026-05-25"
+        },
+        {
+          "id": "id-dlul013yl",
+          "rowId": "id-2souyhvm8",
+          "name": "SIT",
+          "type": "sit",
+          "start": "2026-05-26",
+          "end": "2026-05-26"
+        },
+        {
+          "id": "id-fos10o6l2",
+          "rowId": "id-2souyhvm8",
+          "name": "UAT",
+          "type": "uat",
+          "start": "2026-05-27",
+          "end": "2026-05-28"
+        },
+        {
+          "id": "id-55d92cvlw",
+          "rowId": "id-wiw1ho39l",
+          "name": "上线",
+          "type": "live",
+          "start": "2026-06-01",
+          "end": "2026-06-01"
+        },
+        {
+          "id": "id-bfakx623b",
+          "rowId": "id-2souyhvm8",
+          "name": "上线",
+          "type": "live",
+          "start": "2026-06-01",
+          "end": "2026-06-01"
+        },
+        {
+          "id": "id-1w2voupqe",
+          "rowId": "id-9qxq2sfsj",
+          "name": "功能开发&测试",
+          "type": "dev",
+          "start": "2026-05-13",
+          "end": "2026-05-26"
+        },
+        {
+          "id": "id-w3ka5w1hi",
+          "rowId": "id-9qxq2sfsj",
+          "name": "上线",
+          "type": "live",
+          "start": "2026-06-01",
+          "end": "2026-06-01"
+        },
+        {
+          "id": "id-54u2w5qpx",
+          "rowId": "id-qh6oehaze",
+          "name": "功能开发&测试",
+          "type": "dev",
+          "start": "2026-05-27",
+          "end": "2026-06-09"
+        },
+        {
+          "id": "id-3xmctz848",
+          "rowId": "id-qh6oehaze",
+          "name": "上线",
+          "type": "live",
+          "start": "2026-06-15",
+          "end": "2026-06-15"
+        }
+      ]
+    },
+    "integration": {
+      "title": "第三方集成交付计划",
+      "iterations": [
+        {
+          "id": "id-w619b1eda",
+          "name": "Sprint 2",
+          "start": "",
+          "end": ""
+        },
+        {
+          "id": "id-qidxumnuu",
+          "name": "Sprint 3",
+          "start": "",
+          "end": ""
+        }
+      ],
+      "rows": [
+        {
+          "id": "id-579pp1v4k",
+          "name": ""
+        }
+      ],
+      "tasks": [
+        {
+          "id": "id-4gqp3r5xa",
+          "rowId": "id-579pp1v4k",
+          "name": "功能开发&测试",
+          "type": "dev",
+          "start": "",
+          "end": ""
+        }
+      ]
+    }
+  },
+  "branchStrategy": {
+    "project": {
+      "showDates": true,
+      "rows": {
+        "id-2souyhvm8": {
+          "devBranch": "featre_xxx"
+        },
+        "id-9qxq2sfsj": {},
+        "id-qh6oehaze": {},
+        "id-wiw1ho39l": {}
+      }
+    },
+    "integration": {
+      "showDates": false,
+      "rows": {}
+    }
+  }
+}

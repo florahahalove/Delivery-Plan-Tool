@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>分支策略生成</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-main">
+        <h1>分支策略生成</h1>
+        <p class="subtitle" id="branchPlanTitle">根据上线迭代自动生成模块分支与环境使用策略</p>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn btn-ghost" id="btnExportStrategyJson">导出 JSON</button>
+        <label class="btn btn-ghost file-btn">
+          导入 JSON
+          <input type="file" id="importStrategyJson" accept="application/json" hidden />
+        </label>
+        <a class="btn btn-ghost" href="index.html">返回交付计划</a>
+        <button type="button" class="btn btn-primary" id="btnRegenerateStrategy">重新生成策略</button>
+      </div>
+    </header>
+
+    <nav class="plan-tabs" role="tablist">
+      <button type="button" class="tab" data-plan="project" role="tab" aria-selected="false">项目交付计划</button>
+      <button type="button" class="tab" data-plan="integration" role="tab" aria-selected="false">第三方集成计划</button>
+    </nav>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>自动生成规则</h2>
+        <p class="hint">同一模块下的上线活动如果落在同一个迭代，开发分支使用 master；如果落在不同迭代，则按 feature/[活动名称] 生成特性分支。</p>
+      </div>
+      <div class="branch-rule-grid">
+        <div class="branch-rule-card">
+          <strong>master</strong>
+          <span>开发同学开发，对应开发环境</span>
+        </div>
+        <div class="branch-rule-card">
+          <strong>QA</strong>
+          <span>测试同学测试，对应测试环境</span>
+        </div>
+        <div class="branch-rule-card">
+          <strong>UAT</strong>
+          <span>Showcase 与 PO 验证，对应 UAT 环境</span>
+        </div>
+        <div class="branch-rule-card">
+          <strong>release</strong>
+          <span>上线发布，对应生产环境</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>模块策略调整</h2>
+        <p class="hint">主分支：master。可按所属模块覆盖分支和环境，分支与环境上下对应；调整会自动保存并实时刷新下方策略预览。</p>
+        <label class="branch-toggle">
+          <input type="checkbox" id="toggleBranchDates" />
+          <span>显示分支时间</span>
+        </label>
+      </div>
+      <p class="branch-page-status" id="branchPageStatus"></p>
+      <div class="table-wrap scroll-x">
+        <table class="data-table branch-strategy-table" id="branchStrategyTable">
+          <thead>
+            <tr>
+              <th>所属模块</th>
+              <th>上线活动 / 迭代</th>
+              <th>策略调整</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="branchStrategyTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>分支策略预览</h2>
+        <p class="hint">横坐标为迭代周期，纵坐标为模块；环境用色块表示，分支用不同颜色箭头表示。</p>
+      </div>
+      <div class="branch-preview" id="branchStrategyPreview"></div>
+    </section>
+  </div>
+
+  <script src="branch-strategy.js"></script>
+</body>
+</html>

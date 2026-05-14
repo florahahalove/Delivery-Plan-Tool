@@ -694,6 +694,7 @@
     }
     save();
     renderGantt();
+    updateBranchStrategyButton();
   }
 
   function scheduleGanttRefresh() {
@@ -702,6 +703,7 @@
       ganttDebounceTimer = null;
       save();
       renderGantt();
+      updateBranchStrategyButton();
     }, GANTT_DEBOUNCE_MS);
   }
 
@@ -1118,6 +1120,42 @@
         renderTasksTable();
       });
     });
+
+    updateBranchStrategyButton();
+  }
+
+  function hasCompleteActivityDurations(plan) {
+    const tasks = Array.isArray(plan && plan.tasks) ? plan.tasks : [];
+    if (!tasks.length) return false;
+    return tasks.every((t) => {
+      const ds = parseYmd(t.start);
+      const de = parseYmd(t.end);
+      return (
+        t.rowId &&
+        t.name &&
+        t.type &&
+        ds &&
+        de &&
+        de.getTime() >= ds.getTime()
+      );
+    });
+  }
+
+  function updateBranchStrategyButton() {
+    const btn = document.getElementById("btnOpenBranchStrategy");
+    const gate = document.getElementById("branchStrategyGate");
+    if (!btn) return;
+    const ready = hasCompleteActivityDurations(getState());
+    btn.disabled = !ready;
+    btn.title = ready
+      ? "进入分支策略生成页面"
+      : "请先完整填写当前计划下所有活动的开始和结束日期";
+    if (gate) {
+      gate.textContent = ready
+        ? "活动工期已完整，可进入分支策略生成页面。"
+        : "请先完整填写当前计划下所有活动的开始和结束日期。";
+      gate.classList.toggle("is-ready", ready);
+    }
   }
 
   function esc(s) {
@@ -1581,6 +1619,16 @@
   document.getElementById("btnRender").addEventListener("click", () => {
     flushGanttRefresh();
   });
+
+  const btnOpenBranchStrategy = document.getElementById("btnOpenBranchStrategy");
+  if (btnOpenBranchStrategy) {
+    btnOpenBranchStrategy.addEventListener("click", () => {
+      if (!hasCompleteActivityDurations(getState())) return;
+      syncCurrentTitleFromDom();
+      save();
+      window.location.href = `branch-strategy.html?plan=${encodeURIComponent(currentPlan)}`;
+    });
+  }
 
   const btnSaveSnapshot = document.getElementById("btnSaveSnapshot");
   if (btnSaveSnapshot) {

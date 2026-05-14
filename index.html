@@ -136,7 +136,9 @@
         <h2>活动与工期</h2>
         <p class="hint">「活动」下拉即活动名称与类型（同一项）。开始/结束用系统日期控件选择，结束不能早于开始。</p>
         <button type="button" class="btn btn-sm" id="btnAddTask">+ 添加活动</button>
+        <button type="button" class="btn btn-sm btn-primary" id="btnOpenBranchStrategy" disabled>生成分支策略</button>
       </div>
+      <p class="hint branch-strategy-gate" id="branchStrategyGate">请先完整填写当前计划下所有活动的开始和结束日期。</p>
       <div class="table-wrap scroll-x">
         <table class="data-table data-table-tasks" id="tasksTable">
           <thead>
