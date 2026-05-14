@@ -1193,7 +1193,10 @@
     }
   }
 
-  /** 按每轨内任务条实际高度累加 top，避免多行文案与下一轨重叠 */
+  /**
+   * 基于 DOM 实际渲染位置检测 gantt-bar-slot 的水平重叠（含文字溢出），
+   * 按贪婪策略重新分配泳道并设置 top 实现上下错开。
+   */
   function layoutGanttLaneStacking(ganttRoot) {
     if (!ganttRoot || ganttRoot.querySelector(".gantt-empty")) return;
     ganttRoot.querySelectorAll(".gantt-row-track").forEach((rowEl) => {
@@ -1202,23 +1205,62 @@
         rowEl.removeAttribute("data-gantt-lane-floor");
         return;
       }
-      const byLane = new Map();
-      for (const slot of slots) {
-        const L = Number(slot.dataset.lane);
-        const lane = Number.isFinite(L) && L >= 0 ? L : 0;
-        if (!byLane.has(lane)) byLane.set(lane, []);
-        byLane.get(lane).push(slot);
-      }
-      const maxL = Math.max(...byLane.keys(), 0);
-      let y = GANTT_TRACK_TOP_PAD;
-      for (let L = 0; L <= maxL; L++) {
-        const group = byLane.get(L) || [];
-        for (const slot of group) {
-          slot.style.top = y + "px";
+
+      // 收集每个 slot 的实际视觉边界（含文字溢出和箭头）
+      const infos = slots.map(function (slot) {
+        var sr = slot.getBoundingClientRect();
+        var left = sr.left;
+        var right = sr.right;
+
+        var wrap = slot.querySelector(".gantt-bar-wrap");
+        if (wrap) {
+          var wr = wrap.getBoundingClientRect();
+          if (wr.right > right) right = wr.right;
+          if (wr.left < left) left = wr.left;
         }
-        let maxH = 0;
-        for (const slot of group) {
-          maxH = Math.max(maxH, slot.offsetHeight);
+        var dates = slot.querySelector(".gantt-bar-dates-outside");
+        if (dates) {
+          var dr = dates.getBoundingClientRect();
+          if (dr.right > right) right = dr.right;
+          if (dr.left < left) left = dr.left;
+        }
+        return { slot: slot, left: left, right: right };
+      });
+
+      // 按左边界排序
+      infos.sort(function (a, b) { return a.left - b.left; });
+
+      // 贪婪泳道分配：每个 slot 放入第一个不冲突的泳道
+      var laneRight = []; // laneRight[L] = 该泳道最右边界
+      for (var i = 0; i < infos.length; i++) {
+        var info = infos[i];
+        var L = 0;
+        while (true) {
+          if (laneRight[L] == null || info.left >= laneRight[L]) {
+            laneRight[L] = info.right;
+            info.lane = L;
+            break;
+          }
+          L++;
+        }
+      }
+
+      // 按泳道设置 top，同泳道内按实际高度累加
+      var maxLane = laneRight.length - 1;
+      var y = GANTT_TRACK_TOP_PAD;
+      for (var L = 0; L <= maxLane; L++) {
+        var group = [];
+        for (var j = 0; j < infos.length; j++) {
+          if (infos[j].lane === L) group.push(infos[j].slot);
+        }
+        for (var k = 0; k < group.length; k++) {
+          group[k].style.top = y + "px";
+          group[k].dataset.lane = String(L);
+        }
+        var maxH = 0;
+        for (var m = 0; m < group.length; m++) {
+          var h = group[m].offsetHeight;
+          if (h > maxH) maxH = h;
         }
         y += maxH + GANTT_LANE_STACK_GAP;
       }
